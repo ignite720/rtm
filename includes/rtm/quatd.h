@@ -1051,6 +1051,22 @@ namespace rtm
 		return positive_w_angle <= threshold_angle;
 	}
 
+	//////////////////////////////////////////////////////////////////////////
+	// Per component selection depending on the mask: mask != 0 ? if_true : if_false
+	// Note that if the mask lanes are not all identical, the resulting quaternion
+	// may not be normalized.
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE quatd RTM_SIMD_CALL quat_select(mask4d_arg0 mask, quatd_arg1 if_true, quatd_arg2 if_false) RTM_NO_EXCEPT
+	{
+#if defined(RTM_SSE2_INTRINSICS)
+		__m128d xy = RTM_VECTOR2D_SELECT(mask.xy, if_true.xy, if_false.xy);
+		__m128d zw = RTM_VECTOR2D_SELECT(mask.zw, if_true.zw, if_false.zw);
+		return quatd{ xy, zw };
+#else
+		return quatd{ rtm_impl::select(mask.x, if_true.x, if_false.x), rtm_impl::select(mask.y, if_true.y, if_false.y), rtm_impl::select(mask.z, if_true.z, if_false.z), rtm_impl::select(mask.w, if_true.w, if_false.w) };
+#endif
+	}
+
 	RTM_IMPL_VERSION_NAMESPACE_END
 }
 

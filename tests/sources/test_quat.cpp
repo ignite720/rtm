@@ -26,6 +26,8 @@
 #include "catch2.impl.h"
 
 #include <rtm/type_traits.h>
+#include <rtm/mask4f.h>
+#include <rtm/mask4d.h>
 #include <rtm/quatf.h>
 #include <rtm/quatd.h>
 #include <rtm/vector4f.h>
@@ -97,6 +99,7 @@ static void test_quat_impl(const FloatType threshold)
 	using Vector4Type = typename related_types<FloatType>::vector4;
 	using Float4Type = typename related_types<FloatType>::float4;
 	using ScalarType = typename related_types<FloatType>::scalar;
+	using MaskType = typename related_types<FloatType>::mask4;
 
 	const Vector4Type zero = vector_zero();
 	const QuatType identity = quat_identity();
@@ -503,6 +506,17 @@ static void test_quat_impl(const FloatType threshold)
 		CHECK(quat_near_identity(identity, FloatType(0.0)) == true);
 		CHECK(quat_near_identity(quat_set(FloatType(0.0), FloatType(0.0), FloatType(0.0), FloatType(0.9999999)), FloatType(0.001)) == true);
 		CHECK(quat_near_identity(quat_set(FloatType(0.0), FloatType(0.0), FloatType(0.0), FloatType(0.98)), FloatType(0.001)) == false);
+	}
+
+	{
+		QuatType quat0 = quat_set(FloatType(0.39564531008956383), FloatType(0.044254239301713752), FloatType(0.22768840967675355), FloatType(0.88863059760894492));
+		QuatType quat1 = identity;
+
+		MaskType all_true = mask_true();
+		MaskType all_false = mask_false();
+
+		CHECK(quat_are_equal(quat_select(all_true, quat0, quat1), quat0));
+		CHECK(quat_are_equal(quat_select(all_false, quat0, quat1), quat1));
 	}
 }
 
