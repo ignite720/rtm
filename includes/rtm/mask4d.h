@@ -400,6 +400,34 @@ namespace rtm
 #endif
 	}
 
+	//////////////////////////////////////////////////////////////////////////
+	// Per component logical NOT of the input: ~input
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE mask4d RTM_SIMD_CALL mask_not(mask4d_arg0 input) RTM_NO_EXCEPT
+	{
+#if defined(RTM_SSE2_INTRINSICS)
+		const __m128i true_mask = _mm_set_epi64x(0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL);
+		__m128d xy = _mm_andnot_pd(input.xy, _mm_castsi128_pd(true_mask));
+		__m128d zw = _mm_andnot_pd(input.zw, _mm_castsi128_pd(true_mask));
+		return mask4d{ xy, zw };
+#else
+		const uint64_t* input_ = rtm_impl::bit_cast<const uint64_t*>(&input);
+
+		union
+		{
+			mask4d vector;
+			uint64_t scalar[4];
+		} result;
+
+		result.scalar[0] = ~input_[0];
+		result.scalar[1] = ~input_[1];
+		result.scalar[2] = ~input_[2];
+		result.scalar[3] = ~input_[3];
+
+		return result.vector;
+#endif
+	}
+
 	RTM_IMPL_VERSION_NAMESPACE_END
 }
 

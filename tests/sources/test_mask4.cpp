@@ -100,6 +100,26 @@ inline Mask4Type reference_mask_xor(const Mask4Type& input0, const Mask4Type& in
 	return result;
 }
 
+template<typename IntType, typename Mask4Type>
+inline Mask4Type reference_mask_not(const Mask4Type& input)
+{
+	IntType input_[4];
+
+	static_assert(sizeof(Mask4Type) == sizeof(input_), "Unexpected size");
+	std::memcpy(&input_[0], &input, sizeof(Mask4Type));
+
+	IntType result_[4];
+	result_[0] = ~input_[0];
+	result_[1] = ~input_[1];
+	result_[2] = ~input_[2];
+	result_[3] = ~input_[3];
+
+	Mask4Type result;
+	std::memcpy(&result, &result_[0], sizeof(Mask4Type));
+
+	return result;
+}
+
 template<typename MaskType, typename IntType>
 static void test_mask_impl()
 {
@@ -298,6 +318,10 @@ static void test_mask_impl()
 		CHECK(mask_all_equal(mask_xor(mask0, mask1), reference_mask_xor<IntType>(mask0, mask1)));
 		CHECK(mask_all_equal(mask_xor(mask0, mask2), reference_mask_xor<IntType>(mask0, mask2)));
 		CHECK(mask_all_equal(mask_xor(mask1, mask2), reference_mask_xor<IntType>(mask1, mask2)));
+
+		CHECK(mask_all_equal(mask_not(mask0), reference_mask_not<IntType>(mask0)));
+		CHECK(mask_all_equal(mask_not(mask1), reference_mask_not<IntType>(mask1)));
+		CHECK(mask_all_equal(mask_not(mask2), reference_mask_not<IntType>(mask2)));
 	}
 }
 
