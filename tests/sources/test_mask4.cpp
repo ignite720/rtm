@@ -120,6 +120,20 @@ static void test_mask_impl()
 	}
 
 	{
+		MaskType mask = mask_true();
+		CHECK(mask_get_x(mask) == ~IntType(0));
+		CHECK(mask_get_y(mask) == ~IntType(0));
+		CHECK(mask_get_z(mask) == ~IntType(0));
+		CHECK(mask_get_w(mask) == ~IntType(0));
+
+		mask = mask_false();
+		CHECK(mask_get_x(mask) == IntType(0));
+		CHECK(mask_get_y(mask) == IntType(0));
+		CHECK(mask_get_z(mask) == IntType(0));
+		CHECK(mask_get_w(mask) == IntType(0));
+	}
+
+	{
 		const MaskType mask0 = mask_set(IntType(0), ~IntType(0), IntType(0), ~IntType(0));
 		const MaskType mask1 = mask_set(IntType(0), IntType(0), IntType(0), IntType(0));
 		const MaskType mask2 = mask_set(IntType(0), IntType(0), IntType(0), ~IntType(0));

@@ -259,6 +259,22 @@ namespace rtm
 		return rtm_impl::mask4_uint64_set{ x, y, z, w };
 	}
 
+	//////////////////////////////////////////////////////////////////////////
+	// Creates a mask4 with all 4 components set to true.
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE constexpr rtm_impl::mask4_bool_set RTM_SIMD_CALL mask_true() RTM_NO_EXCEPT
+	{
+		return rtm_impl::mask4_bool_set{ true, true, true, true };
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// Creates a mask4 with all 4 components set to false.
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE constexpr rtm_impl::mask4_bool_set RTM_SIMD_CALL mask_false() RTM_NO_EXCEPT
+	{
+		return rtm_impl::mask4_bool_set{ false, false, false, false };
+	}
+
 	RTM_IMPL_VERSION_NAMESPACE_END
 }
 
