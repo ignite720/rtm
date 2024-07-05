@@ -29,6 +29,26 @@
 
 using namespace rtm;
 
+RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_NOINLINE matrix3x3f RTM_SIMD_CALL matrix_mul_passing_current(matrix3x3f_arg0 lhs, matrix3x3f_arg1 rhs) RTM_NO_EXCEPT
+{
+	vector4f tmp = vector_mul(vector_dup_x(lhs.x_axis), rhs.x_axis);
+	tmp = vector_mul_add(vector_dup_y(lhs.x_axis), rhs.y_axis, tmp);
+	tmp = vector_mul_add(vector_dup_z(lhs.x_axis), rhs.z_axis, tmp);
+	vector4f x_axis = tmp;
+
+	tmp = vector_mul(vector_dup_x(lhs.y_axis), rhs.x_axis);
+	tmp = vector_mul_add(vector_dup_y(lhs.y_axis), rhs.y_axis, tmp);
+	tmp = vector_mul_add(vector_dup_z(lhs.y_axis), rhs.z_axis, tmp);
+	vector4f y_axis = tmp;
+
+	tmp = vector_mul(vector_dup_x(lhs.z_axis), rhs.x_axis);
+	tmp = vector_mul_add(vector_dup_y(lhs.z_axis), rhs.y_axis, tmp);
+	tmp = vector_mul_add(vector_dup_z(lhs.z_axis), rhs.z_axis, tmp);
+	vector4f z_axis = tmp;
+
+	return matrix3x3f{ x_axis, y_axis, z_axis };
+}
+
 // On ARM64, the caller places the 3 addresses into registers x0, x1, and x2
 // ldp    q0, q1, [x1]
 // ldp    q2, q3, [x0]
@@ -100,6 +120,27 @@ RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_NOINLINE matrix3x3f RTM_SIMD_CALL ma
 
 	return matrix3x3f{ x_axis, y_axis, z_axis };
 }
+
+static void bm_matrix3x3_arg_passing_current(benchmark::State& state)
+{
+	quatf rotation_around_z = quat_from_euler(scalar_deg_to_rad(0.0F), scalar_deg_to_rad(90.0F), scalar_deg_to_rad(0.0F));
+	matrix3x3f m0 = matrix_from_quat(rotation_around_z);
+
+	for (auto _ : state)
+	{
+		// We use the same matrix for input/output to simulate the worst case scenario
+		// where we might need store-forwarding to load our inputs
+		// In practice, when the function is called, we don't know what produced the inputs
+		m0 = matrix_mul_passing_current(m0, m0);
+		m0 = matrix_mul_passing_current(m0, m0);
+		m0 = matrix_mul_passing_current(m0, m0);
+		m0 = matrix_mul_passing_current(m0, m0);
+	}
+
+	benchmark::DoNotOptimize(m0);
+}
+
+BENCHMARK(bm_matrix3x3_arg_passing_current);
 
 static void bm_matrix3x3_arg_passing_ref(benchmark::State& state)
 {
