@@ -49,7 +49,7 @@ RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_NOINLINE matrix3x3f RTM_SIMD_CALL ma
 	return matrix3x3f{ x_axis, y_axis, z_axis };
 }
 
-// On ARM64, the caller places the 3 addresses into registers x0, x1, and x2
+// On ARM64 (Apple clang), the caller places the 3 addresses into registers x0, x1, and x2
 // ldp    q0, q1, [x1]
 // ldp    q2, q3, [x0]
 // fmul.4s v4, v0, v2[0]
@@ -86,8 +86,7 @@ RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_NOINLINE void RTM_SIMD_CALL matrix_m
 	out_result = matrix3x3f{ x_axis, y_axis, z_axis };
 }
 
-// On ARM64, the caller places the vector values in registers v0, v1, v2, v3, v4, v5 and the result is
-// returned in v0, v1, v2
+// On ARM64 (Apple clang), the caller places the vector values in registers v0, v1, v2, v3, v4, v5 and the result is returned in v0, v1, v2
 // fmul.4s v6, v3, v0[0]
 // fmla.4s v6, v4, v0[1]
 // fmla.4s v6, v5, v0[2]
