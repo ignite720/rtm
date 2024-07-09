@@ -120,7 +120,7 @@ RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_NOINLINE matrix3x3f RTM_SIMD_CALL ma
 	return matrix3x3f{ x_axis, y_axis, z_axis };
 }
 
-static void bm_matrix3x3_arg_passing_current(benchmark::State& state)
+static void bm_matrix3x3f_arg_passing_current(benchmark::State& state)
 {
 	quatf rotation_around_z = quat_from_euler(scalar_deg_to_rad(0.0F), scalar_deg_to_rad(90.0F), scalar_deg_to_rad(0.0F));
 	matrix3x3f m0 = matrix_from_quat(rotation_around_z);
@@ -139,9 +139,9 @@ static void bm_matrix3x3_arg_passing_current(benchmark::State& state)
 	benchmark::DoNotOptimize(m0);
 }
 
-BENCHMARK(bm_matrix3x3_arg_passing_current);
+BENCHMARK(bm_matrix3x3f_arg_passing_current);
 
-static void bm_matrix3x3_arg_passing_ref(benchmark::State& state)
+static void bm_matrix3x3f_arg_passing_ref(benchmark::State& state)
 {
 	quatf rotation_around_z = quat_from_euler(scalar_deg_to_rad(0.0F), scalar_deg_to_rad(90.0F), scalar_deg_to_rad(0.0F));
 	matrix3x3f m0 = matrix_from_quat(rotation_around_z);
@@ -162,9 +162,9 @@ static void bm_matrix3x3_arg_passing_ref(benchmark::State& state)
 	benchmark::DoNotOptimize(m0);
 }
 
-BENCHMARK(bm_matrix3x3_arg_passing_ref);
+BENCHMARK(bm_matrix3x3f_arg_passing_ref);
 
-static void bm_matrix3x3_arg_passing_value(benchmark::State& state)
+static void bm_matrix3x3f_arg_passing_value(benchmark::State& state)
 {
 	quatf rotation_around_z = quat_from_euler(scalar_deg_to_rad(0.0F), scalar_deg_to_rad(90.0F), scalar_deg_to_rad(0.0F));
 	matrix3x3f m0 = matrix_from_quat(rotation_around_z);
@@ -185,4 +185,4 @@ static void bm_matrix3x3_arg_passing_value(benchmark::State& state)
 	benchmark::DoNotOptimize(m0);
 }
 
-BENCHMARK(bm_matrix3x3_arg_passing_value);
+BENCHMARK(bm_matrix3x3f_arg_passing_value);
