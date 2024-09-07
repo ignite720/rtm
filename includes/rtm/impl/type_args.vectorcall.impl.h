@@ -98,7 +98,8 @@ namespace rtm
 	using mask4i_arg7 = const mask4i&;
 	using mask4i_argn = const mask4i&;
 
-	// With __vectorcall, vector aggregates are also passed by register and they can use up to 4 registers.
+	// With __vectorcall, vector aggregates are also passed by register and they can use up to 6 registers.
+	// Due to how registers are assigned, we reserve some slack and might not use all 6 available registers.
 	// Non-scalar types using doubles are aggregate types
 
 	using vector4d_arg0 = const vector4d;
