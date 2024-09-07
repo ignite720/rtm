@@ -842,6 +842,16 @@ void test_vector4_relational_impl(const FloatType threshold)
 	CHECK((mask_get_z(vector_equal(test_value0, test_value0)) != 0) == (test_value0_flt[2] == test_value0_flt[2]));
 	CHECK((mask_get_w(vector_equal(test_value0, test_value0)) != 0) == (test_value0_flt[3] == test_value0_flt[3]));
 
+	CHECK((mask_get_x(vector_not_equal(test_value0, test_value1)) != 0) != (test_value0_flt[0] == test_value1_flt[0]));
+	CHECK((mask_get_y(vector_not_equal(test_value0, test_value1)) != 0) != (test_value0_flt[1] == test_value1_flt[1]));
+	CHECK((mask_get_z(vector_not_equal(test_value0, test_value1)) != 0) != (test_value0_flt[2] == test_value1_flt[2]));
+	CHECK((mask_get_w(vector_not_equal(test_value0, test_value1)) != 0) != (test_value0_flt[3] == test_value1_flt[3]));
+
+	CHECK((mask_get_x(vector_not_equal(test_value0, test_value0)) != 0) != (test_value0_flt[0] == test_value0_flt[0]));
+	CHECK((mask_get_y(vector_not_equal(test_value0, test_value0)) != 0) != (test_value0_flt[1] == test_value0_flt[1]));
+	CHECK((mask_get_z(vector_not_equal(test_value0, test_value0)) != 0) != (test_value0_flt[2] == test_value0_flt[2]));
+	CHECK((mask_get_w(vector_not_equal(test_value0, test_value0)) != 0) != (test_value0_flt[3] == test_value0_flt[3]));
+
 	CHECK((mask_get_x(vector_less_than(test_value0, test_value1)) != 0) == (test_value0_flt[0] < test_value1_flt[0]));
 	CHECK((mask_get_y(vector_less_than(test_value0, test_value1)) != 0) == (test_value0_flt[1] < test_value1_flt[1]));
 	CHECK((mask_get_z(vector_less_than(test_value0, test_value1)) != 0) == (test_value0_flt[2] < test_value1_flt[2]));
@@ -1142,6 +1152,71 @@ void test_vector4_relational_impl(const FloatType threshold)
 	CHECK(vector_any_equal3(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(0.0), FloatType(0.0)), zero) == true);
 	CHECK(vector_any_equal3(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(-1.0), FloatType(0.0)), zero) == false);
 	CHECK(vector_any_equal3(zero, zero) == true);
+
+
+	CHECK(vector_all_not_equal(vector_set(FloatType(1.0), FloatType(1.0), FloatType(1.0), FloatType(1.0)), zero) != false);
+	CHECK(vector_all_not_equal(vector_set(FloatType(1.0), FloatType(-1.0), FloatType(-1.0), FloatType(-1.0)), zero) != false);
+	CHECK(vector_all_not_equal(vector_set(FloatType(-1.0), FloatType(1.0), FloatType(-1.0), FloatType(-1.0)), zero) != false);
+	CHECK(vector_all_not_equal(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(1.0), FloatType(-1.0)), zero) != false);
+	CHECK(vector_all_not_equal(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(-1.0), FloatType(1.0)), zero) != false);
+	CHECK(vector_all_not_equal(vector_set(FloatType(0.0), FloatType(0.0), FloatType(-1.0), FloatType(-1.0)), zero) == false);
+	CHECK(vector_all_not_equal(vector_set(FloatType(-1.0), FloatType(0.0), FloatType(-1.0), FloatType(-1.0)), zero) == false);
+	CHECK(vector_all_not_equal(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(0.0), FloatType(-1.0)), zero) == false);
+	CHECK(vector_all_not_equal(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(-1.0), FloatType(0.0)), zero) == false);
+	CHECK(vector_all_not_equal(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(-1.0), FloatType(-1.0)), zero) != false);
+	CHECK(vector_all_not_equal(zero, zero) != true);
+
+	CHECK(vector_all_not_equal2(vector_set(FloatType(1.0), FloatType(1.0), FloatType(1.0), FloatType(0.0)), zero) != false);
+	CHECK(vector_all_not_equal2(vector_set(FloatType(1.0), FloatType(-1.0), FloatType(-1.0), FloatType(0.0)), zero) != false);
+	CHECK(vector_all_not_equal2(vector_set(FloatType(-1.0), FloatType(1.0), FloatType(-1.0), FloatType(0.0)), zero) != false);
+	CHECK(vector_all_not_equal2(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(1.0), FloatType(0.0)), zero) != false);
+	CHECK(vector_all_not_equal2(vector_set(FloatType(0.0), FloatType(0.0), FloatType(-1.0), FloatType(0.0)), zero) != true);
+	CHECK(vector_all_not_equal2(vector_set(FloatType(-1.0), FloatType(0.0), FloatType(-1.0), FloatType(0.0)), zero) == false);
+	CHECK(vector_all_not_equal2(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(0.0), FloatType(0.0)), zero) != false);
+	CHECK(vector_all_not_equal2(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(-1.0), FloatType(0.0)), zero) != false);
+	CHECK(vector_all_not_equal2(zero, zero) != true);
+
+	CHECK(vector_all_not_equal3(vector_set(FloatType(1.0), FloatType(1.0), FloatType(1.0), FloatType(0.0)), zero) != false);
+	CHECK(vector_all_not_equal3(vector_set(FloatType(1.0), FloatType(-1.0), FloatType(-1.0), FloatType(0.0)), zero) != false);
+	CHECK(vector_all_not_equal3(vector_set(FloatType(-1.0), FloatType(1.0), FloatType(-1.0), FloatType(0.0)), zero) != false);
+	CHECK(vector_all_not_equal3(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(1.0), FloatType(0.0)), zero) != false);
+	CHECK(vector_all_not_equal3(vector_set(FloatType(0.0), FloatType(0.0), FloatType(-1.0), FloatType(0.0)), zero) == false);
+	CHECK(vector_all_not_equal3(vector_set(FloatType(-1.0), FloatType(0.0), FloatType(-1.0), FloatType(0.0)), zero) == false);
+	CHECK(vector_all_not_equal3(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(0.0), FloatType(0.0)), zero) == false);
+	CHECK(vector_all_not_equal3(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(-1.0), FloatType(0.0)), zero) != false);
+	CHECK(vector_all_not_equal3(zero, zero) != true);
+
+	CHECK(vector_any_not_equal(vector_set(FloatType(1.0), FloatType(1.0), FloatType(1.0), FloatType(1.0)), zero) != false);
+	CHECK(vector_any_not_equal(vector_set(FloatType(1.0), FloatType(-1.0), FloatType(-1.0), FloatType(-1.0)), zero) != false);
+	CHECK(vector_any_not_equal(vector_set(FloatType(-1.0), FloatType(1.0), FloatType(-1.0), FloatType(-1.0)), zero) != false);
+	CHECK(vector_any_not_equal(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(1.0), FloatType(-1.0)), zero) != false);
+	CHECK(vector_any_not_equal(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(-1.0), FloatType(1.0)), zero) != false);
+	CHECK(vector_any_not_equal(vector_set(FloatType(0.0), FloatType(-1.0), FloatType(-1.0), FloatType(-1.0)), zero) == true);
+	CHECK(vector_any_not_equal(vector_set(FloatType(-1.0), FloatType(0.0), FloatType(-1.0), FloatType(-1.0)), zero) == true);
+	CHECK(vector_any_not_equal(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(0.0), FloatType(-1.0)), zero) == true);
+	CHECK(vector_any_not_equal(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(-1.0), FloatType(0.0)), zero) == true);
+	CHECK(vector_any_not_equal(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(-1.0), FloatType(-1.0)), zero) != false);
+	CHECK(vector_any_not_equal(zero, zero) != true);
+
+	CHECK(vector_any_not_equal2(vector_set(FloatType(1.0), FloatType(1.0), FloatType(1.0), FloatType(0.0)), zero) != false);
+	CHECK(vector_any_not_equal2(vector_set(FloatType(1.0), FloatType(-1.0), FloatType(-1.0), FloatType(0.0)), zero) != false);
+	CHECK(vector_any_not_equal2(vector_set(FloatType(-1.0), FloatType(1.0), FloatType(-1.0), FloatType(0.0)), zero) != false);
+	CHECK(vector_any_not_equal2(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(1.0), FloatType(0.0)), zero) != false);
+	CHECK(vector_any_not_equal2(vector_set(FloatType(0.0), FloatType(-1.0), FloatType(-1.0), FloatType(0.0)), zero) == true);
+	CHECK(vector_any_not_equal2(vector_set(FloatType(-1.0), FloatType(0.0), FloatType(-1.0), FloatType(0.0)), zero) == true);
+	CHECK(vector_any_not_equal2(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(0.0), FloatType(0.0)), zero) != false);
+	CHECK(vector_any_not_equal2(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(-1.0), FloatType(0.0)), zero) != false);
+	CHECK(vector_any_not_equal2(zero, zero) != true);
+
+	CHECK(vector_any_not_equal3(vector_set(FloatType(1.0), FloatType(1.0), FloatType(1.0), FloatType(0.0)), zero) != false);
+	CHECK(vector_any_not_equal3(vector_set(FloatType(1.0), FloatType(-1.0), FloatType(-1.0), FloatType(0.0)), zero) != false);
+	CHECK(vector_any_not_equal3(vector_set(FloatType(-1.0), FloatType(1.0), FloatType(-1.0), FloatType(0.0)), zero) != false);
+	CHECK(vector_any_not_equal3(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(1.0), FloatType(0.0)), zero) != false);
+	CHECK(vector_any_not_equal3(vector_set(FloatType(0.0), FloatType(-1.0), FloatType(-1.0), FloatType(0.0)), zero) == true);
+	CHECK(vector_any_not_equal3(vector_set(FloatType(-1.0), FloatType(0.0), FloatType(-1.0), FloatType(0.0)), zero) == true);
+	CHECK(vector_any_not_equal3(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(0.0), FloatType(0.0)), zero) == true);
+	CHECK(vector_any_not_equal3(vector_set(FloatType(-1.0), FloatType(-1.0), FloatType(-1.0), FloatType(0.0)), zero) != false);
+	CHECK(vector_any_not_equal3(zero, zero) != true);
 
 	CHECK(vector_all_near_equal(zero, zero, threshold) == true);
 	CHECK(vector_all_near_equal(zero, vector_set(FloatType(1.0), FloatType(1.0), FloatType(1.0), FloatType(1.0)), FloatType(1.0001)) == true);

@@ -2089,6 +2089,20 @@ namespace rtm
 	}
 
 	//////////////////////////////////////////////////////////////////////////
+	// Returns per component ~0 if not equal, otherwise 0: lhs != rhs ? ~0 : 0
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE mask4d RTM_SIMD_CALL vector_not_equal(vector4d_arg0 lhs, vector4d_arg1 rhs) RTM_NO_EXCEPT
+	{
+#if defined(RTM_SSE2_INTRINSICS)
+		__m128d xy_lt_pd = _mm_cmpneq_pd(lhs.xy, rhs.xy);
+		__m128d zw_lt_pd = _mm_cmpneq_pd(lhs.zw, rhs.zw);
+		return mask4d{ xy_lt_pd, zw_lt_pd };
+#else
+		return mask4d{ rtm_impl::get_mask_value(lhs.x != rhs.x), rtm_impl::get_mask_value(lhs.y != rhs.y), rtm_impl::get_mask_value(lhs.z != rhs.z), rtm_impl::get_mask_value(lhs.w != rhs.w) };
+#endif
+	}
+
+	//////////////////////////////////////////////////////////////////////////
 	// Returns per component ~0 if less than, otherwise 0: lhs < rhs ? ~0 : 0
 	//////////////////////////////////////////////////////////////////////////
 	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE mask4d RTM_SIMD_CALL vector_less_than(vector4d_arg0 lhs, vector4d_arg1 rhs) RTM_NO_EXCEPT
@@ -2551,6 +2565,88 @@ namespace rtm
 		return _mm_movemask_pd(xy_eq_pd) != 0 || (_mm_movemask_pd(zw_eq_pd) & 1) != 0;
 #else
 		return lhs.x == rhs.x || lhs.y == rhs.y || lhs.z == rhs.z;
+#endif
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// Returns true if all [xyzw] components are not equal, otherwise false: all(lhs.xyzw != rhs.xyzw)
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE bool RTM_SIMD_CALL vector_all_not_equal(vector4d_arg0 lhs, vector4d_arg1 rhs) RTM_NO_EXCEPT
+	{
+#if defined(RTM_SSE2_INTRINSICS)
+		__m128d xy_eq_pd = _mm_cmpneq_pd(lhs.xy, rhs.xy);
+		__m128d zw_eq_pd = _mm_cmpneq_pd(lhs.zw, rhs.zw);
+		return (_mm_movemask_pd(xy_eq_pd) & _mm_movemask_pd(zw_eq_pd)) == 3;
+#else
+		return lhs.x != rhs.x && lhs.y != rhs.y && lhs.z != rhs.z && lhs.w != rhs.w;
+#endif
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// Returns true if all [xy] components are not equal, otherwise false: all(lhs.xy != rhs.xy)
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE bool RTM_SIMD_CALL vector_all_not_equal2(vector4d_arg0 lhs, vector4d_arg1 rhs) RTM_NO_EXCEPT
+	{
+#if defined(RTM_SSE2_INTRINSICS)
+		__m128d xy_eq_pd = _mm_cmpneq_pd(lhs.xy, rhs.xy);
+		return _mm_movemask_pd(xy_eq_pd) == 3;
+#else
+		return lhs.x != rhs.x && lhs.y != rhs.y;
+#endif
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// Returns true if all [xyz] components are not equal, otherwise false: all(lhs.xyz != rhs.xyz)
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE bool RTM_SIMD_CALL vector_all_not_equal3(vector4d_arg0 lhs, vector4d_arg1 rhs) RTM_NO_EXCEPT
+	{
+#if defined(RTM_SSE2_INTRINSICS)
+		__m128d xy_eq_pd = _mm_cmpneq_pd(lhs.xy, rhs.xy);
+		__m128d zw_eq_pd = _mm_cmpneq_pd(lhs.zw, rhs.zw);
+		return _mm_movemask_pd(xy_eq_pd) == 3 && (_mm_movemask_pd(zw_eq_pd) & 1) != 0;
+#else
+		return lhs.x != rhs.x && lhs.y != rhs.y && lhs.z != rhs.z;
+#endif
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// Returns true if any [xyzw] components are not equal, otherwise false: any(lhs.xyzw != rhs.xyzw)
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE bool RTM_SIMD_CALL vector_any_not_equal(vector4d_arg0 lhs, vector4d_arg1 rhs) RTM_NO_EXCEPT
+	{
+#if defined(RTM_SSE2_INTRINSICS)
+		__m128d xy_eq_pd = _mm_cmpneq_pd(lhs.xy, rhs.xy);
+		__m128d zw_eq_pd = _mm_cmpneq_pd(lhs.zw, rhs.zw);
+		return (_mm_movemask_pd(xy_eq_pd) | _mm_movemask_pd(zw_eq_pd)) != 0;
+#else
+		return lhs.x != rhs.x || lhs.y != rhs.y || lhs.z != rhs.z || lhs.w != rhs.w;
+#endif
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// Returns true if any [xy] components are not equal, otherwise false: any(lhs.xy != rhs.xy)
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE bool RTM_SIMD_CALL vector_any_not_equal2(vector4d_arg0 lhs, vector4d_arg1 rhs) RTM_NO_EXCEPT
+	{
+#if defined(RTM_SSE2_INTRINSICS)
+		__m128d xy_eq_pd = _mm_cmpneq_pd(lhs.xy, rhs.xy);
+		return _mm_movemask_pd(xy_eq_pd) != 0;
+#else
+		return lhs.x != rhs.x || lhs.y != rhs.y;
+#endif
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// Returns true if any [xyz] components are not equal, otherwise false: any(lhs.xyz != rhs.xyz)
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE bool RTM_SIMD_CALL vector_any_not_equal3(vector4d_arg0 lhs, vector4d_arg1 rhs) RTM_NO_EXCEPT
+	{
+#if defined(RTM_SSE2_INTRINSICS)
+		__m128d xy_eq_pd = _mm_cmpneq_pd(lhs.xy, rhs.xy);
+		__m128d zw_eq_pd = _mm_cmpneq_pd(lhs.zw, rhs.zw);
+		return _mm_movemask_pd(xy_eq_pd) != 0 || (_mm_movemask_pd(zw_eq_pd) & 1) != 0;
+#else
+		return lhs.x != rhs.x || lhs.y != rhs.y || lhs.z != rhs.z;
 #endif
 	}
 

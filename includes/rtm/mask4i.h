@@ -327,6 +327,21 @@ namespace rtm
 #endif
 	}
 
+	//////////////////////////////////////////////////////////////////////////
+	// Per component logical NOT of the input: ~input
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE mask4i RTM_SIMD_CALL mask_not(mask4i_arg0 input) RTM_NO_EXCEPT
+	{
+#if defined(RTM_SSE2_INTRINSICS)
+		const __m128i true_mask = _mm_set_epi32(0xFFFFFFFFULL, 0xFFFFFFFFULL, 0xFFFFFFFFULL, 0xFFFFFFFFULL);
+		return _mm_andnot_si128(input, true_mask);
+#elif defined(RTM_NEON_INTRINSICS)
+		return RTM_IMPL_MASK4i_SET(vmvnq_u32(RTM_IMPL_MASK4i_GET(input)));
+#else
+		return mask4i{ ~input.x, ~input.y, ~input.z, ~input.w };
+#endif
+	}
+
 	RTM_IMPL_VERSION_NAMESPACE_END
 }
 

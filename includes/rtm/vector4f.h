@@ -2488,6 +2488,20 @@ namespace rtm
 	}
 
 	//////////////////////////////////////////////////////////////////////////
+	// Returns per component ~0 if not equal, otherwise 0: lhs != rhs ? ~0 : 0
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE mask4f RTM_SIMD_CALL vector_not_equal(vector4f_arg0 lhs, vector4f_arg1 rhs) RTM_NO_EXCEPT
+	{
+#if defined(RTM_SSE2_INTRINSICS)
+		return _mm_cmpneq_ps(lhs, rhs);
+#elif defined(RTM_NEON_INTRINSICS)
+		return vmvnq_u32(vceqq_f32(lhs, rhs));
+#else
+		return mask4f{ rtm_impl::get_mask_value(lhs.x != rhs.x), rtm_impl::get_mask_value(lhs.y != rhs.y), rtm_impl::get_mask_value(lhs.z != rhs.z), rtm_impl::get_mask_value(lhs.w != rhs.w) };
+#endif
+	}
+
+	//////////////////////////////////////////////////////////////////////////
 	// Returns per component ~0 if less than, otherwise 0: lhs < rhs ? ~0 : 0
 	//////////////////////////////////////////////////////////////////////////
 	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE mask4f RTM_SIMD_CALL vector_less_than(vector4f_arg0 lhs, vector4f_arg1 rhs) RTM_NO_EXCEPT
@@ -3200,6 +3214,138 @@ namespace rtm
 		return result;
 #else
 		return lhs.x == rhs.x || lhs.y == rhs.y || lhs.z == rhs.z;
+#endif
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// Returns true if all [xyzw] components are not equal, otherwise false: all(lhs.xyzw != rhs.xyzw)
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE bool RTM_SIMD_CALL vector_all_not_equal(vector4f_arg0 lhs, vector4f_arg1 rhs) RTM_NO_EXCEPT
+	{
+#if defined(RTM_SSE2_INTRINSICS)
+		const __m128 mask = _mm_cmpneq_ps(lhs, rhs);
+
+		bool result;
+		RTM_MASK4F_ALL_TRUE(mask, result);
+		return result;
+#elif defined(RTM_NEON_INTRINSICS)
+		const uint32x4_t mask = vmvnq_u32(vceqq_f32(lhs, rhs));
+
+		bool result;
+		RTM_MASK4F_ALL_TRUE(mask, result);
+		return result;
+#else
+		return lhs.x != rhs.x && lhs.y != rhs.y && lhs.z != rhs.z && lhs.w != rhs.w;
+#endif
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// Returns true if all [xy] components are not equal, otherwise false: all(lhs.xy != rhs.xy)
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE bool RTM_SIMD_CALL vector_all_not_equal2(vector4f_arg0 lhs, vector4f_arg1 rhs) RTM_NO_EXCEPT
+	{
+#if defined(RTM_SSE2_INTRINSICS)
+		const __m128 mask = _mm_cmpneq_ps(lhs, rhs);
+
+		bool result;
+		RTM_MASK4F_ALL_TRUE2(mask, result);
+		return result;
+#elif defined(RTM_NEON_INTRINSICS)
+		const uint32x2_t mask = vmvn_u32(vceq_f32(vget_low_f32(lhs), vget_low_f32(rhs)));
+
+		bool result;
+		RTM_MASK2F_ALL_TRUE(mask, result);
+		return result;
+#else
+		return lhs.x != rhs.x && lhs.y != rhs.y;
+#endif
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// Returns true if all [xyz] components are not equal, otherwise false: all(lhs.xyz != rhs.xyz)
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE bool RTM_SIMD_CALL vector_all_not_equal3(vector4f_arg0 lhs, vector4f_arg1 rhs) RTM_NO_EXCEPT
+	{
+#if defined(RTM_SSE2_INTRINSICS)
+		const __m128 mask = _mm_cmpneq_ps(lhs, rhs);
+
+		bool result;
+		RTM_MASK4F_ALL_TRUE3(mask, result);
+		return result;
+#elif defined(RTM_NEON_INTRINSICS)
+		const uint32x4_t mask = vmvnq_u32(vceqq_f32(lhs, rhs));
+
+		bool result;
+		RTM_MASK4F_ALL_TRUE3(mask, result);
+		return result;
+#else
+		return lhs.x != rhs.x && lhs.y != rhs.y && lhs.z != rhs.z;
+#endif
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// Returns true if any [xyzw] components are not equal, otherwise false: any(lhs.xyzw != rhs.xyzw)
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE bool RTM_SIMD_CALL vector_any_not_equal(vector4f_arg0 lhs, vector4f_arg1 rhs) RTM_NO_EXCEPT
+	{
+#if defined(RTM_SSE2_INTRINSICS)
+		const __m128 mask = _mm_cmpneq_ps(lhs, rhs);
+
+		bool result;
+		RTM_MASK4F_ANY_TRUE(mask, result);
+		return result;
+#elif defined(RTM_NEON_INTRINSICS)
+		const uint32x4_t mask = vmvnq_u32(vceqq_f32(lhs, rhs));
+
+		bool result;
+		RTM_MASK4F_ANY_TRUE(mask, result);
+		return result;
+#else
+		return lhs.x != rhs.x || lhs.y != rhs.y || lhs.z != rhs.z || lhs.w != rhs.w;
+#endif
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// Returns true if any [xy] components are not equal, otherwise false: any(lhs.xy != rhs.xy)
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE bool RTM_SIMD_CALL vector_any_not_equal2(vector4f_arg0 lhs, vector4f_arg1 rhs) RTM_NO_EXCEPT
+	{
+#if defined(RTM_SSE2_INTRINSICS)
+		const __m128 mask = _mm_cmpneq_ps(lhs, rhs);
+
+		bool result;
+		RTM_MASK4F_ANY_TRUE2(mask, result);
+		return result;
+#elif defined(RTM_NEON_INTRINSICS)
+		const uint32x2_t mask = vmvn_u32(vceq_f32(vget_low_f32(lhs), vget_low_f32(rhs)));
+
+		bool result;
+		RTM_MASK2F_ANY_TRUE(mask, result);
+		return result;
+#else
+		return lhs.x != rhs.x || lhs.y != rhs.y;
+#endif
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// Returns true if any [xyz] components are not equal, otherwise false: any(lhs.xyz != rhs.xyz)
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE bool RTM_SIMD_CALL vector_any_not_equal3(vector4f_arg0 lhs, vector4f_arg1 rhs) RTM_NO_EXCEPT
+	{
+#if defined(RTM_SSE2_INTRINSICS)
+		const __m128 mask = _mm_cmpneq_ps(lhs, rhs);
+
+		bool result;
+		RTM_MASK4F_ANY_TRUE3(mask, result);
+		return result;
+#elif defined(RTM_NEON_INTRINSICS)
+		const uint32x4_t mask = vmvnq_u32(vceqq_f32(lhs, rhs));
+
+		bool result;
+		RTM_MASK4F_ANY_TRUE3(mask, result);
+		return result;
+#else
+		return lhs.x != rhs.x || lhs.y != rhs.y || lhs.z != rhs.z;
 #endif
 	}
 
