@@ -466,7 +466,7 @@ namespace rtm
 	//////////////////////////////////////////////////////////////////////////
 	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE quatd RTM_SIMD_CALL quat_mul(quatd_arg0 quat, scalard_arg1 scalar) RTM_NO_EXCEPT
 	{
-		return quat_set(quat_get_x(quat) * scalar, quat_get_y(quat) * scalar, quat_get_z(quat) * scalar, quat_get_w(quat) * scalar);
+		return quat_mul(quat, scalar_cast(scalar));
 	}
 #endif
 
