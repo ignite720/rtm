@@ -54,6 +54,20 @@ static Vector4Type quat_rotate_scalar(const Vector4Type& vector, const QuatType&
 }
 
 template<typename QuatType, typename FloatType>
+static QuatType quat_add_scalar(const QuatType& lhs, const QuatType& rhs)
+{
+	FloatType lhs_raw[4] = { quat_get_x(lhs), quat_get_y(lhs), quat_get_z(lhs), quat_get_w(lhs) };
+	FloatType rhs_raw[4] = { quat_get_x(rhs), quat_get_y(rhs), quat_get_z(rhs), quat_get_w(rhs) };
+
+	FloatType x = lhs_raw[0] + rhs_raw[0];
+	FloatType y = lhs_raw[1] + rhs_raw[1];
+	FloatType z = lhs_raw[2] + rhs_raw[2];
+	FloatType w = lhs_raw[3] + rhs_raw[3];
+
+	return quat_set(x, y, z, w);
+}
+
+template<typename QuatType, typename FloatType>
 static QuatType quat_mul_scalar(const QuatType& lhs, const QuatType& rhs)
 {
 	FloatType lhs_raw[4] = { quat_get_x(lhs), quat_get_y(lhs), quat_get_z(lhs), quat_get_w(lhs) };
@@ -198,6 +212,14 @@ static void test_quat_impl(const FloatType threshold)
 		QuatType quat_conj = quat_conjugate(quat);
 		QuatType quat_conj_scalar = quat_set(-FloatType(quat_get_x(quat)), -FloatType(quat_get_y(quat)), -FloatType(quat_get_z(quat)), FloatType(quat_get_w(quat)));
 		CHECK(quat_near_equal(quat_conj, quat_conj_scalar, threshold));
+	}
+
+	{
+		QuatType quat0 = quat_from_euler(scalar_deg_to_rad(FloatType(30.0)), scalar_deg_to_rad(FloatType(-45.0)), scalar_deg_to_rad(FloatType(90.0)));
+		QuatType quat1 = quat_from_euler(scalar_deg_to_rad(FloatType(45.0)), scalar_deg_to_rad(FloatType(60.0)), scalar_deg_to_rad(FloatType(120.0)));
+		QuatType result = quat_add(quat0, quat1);
+		QuatType result_ref = quat_add_scalar<QuatType, FloatType>(quat0, quat1);
+		CHECK(quat_near_equal(result, result_ref, threshold));
 	}
 
 	{

@@ -491,6 +491,20 @@ namespace rtm
 	}
 
 	//////////////////////////////////////////////////////////////////////////
+	// Adds two quaternions.
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK inline quatf RTM_SIMD_CALL quat_add(quatf_arg0 lhs, quatf_arg1 rhs) RTM_NO_EXCEPT
+	{
+#if defined(RTM_SSE2_INTRINSICS)
+		return _mm_add_ps(lhs, rhs);
+#elif defined(RTM_NEON_INTRINSICS)
+		return vaddq_f32(lhs, rhs);
+#else
+		return quat_set(quat_get_x(lhs) + quat_get_x(rhs), quat_get_y(lhs) + quat_get_y(rhs), quat_get_z(lhs) + quat_get_z(rhs), quat_get_w(lhs) + quat_get_w(rhs));
+#endif
+	}
+
+	//////////////////////////////////////////////////////////////////////////
 	// Multiplies two quaternions.
 	// Note that due to floating point rounding, the result might not be perfectly normalized.
 	// Multiplication order is as follow: local_to_world = quat_mul(local_to_object, object_to_world)
