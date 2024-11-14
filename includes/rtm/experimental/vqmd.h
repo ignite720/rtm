@@ -117,9 +117,9 @@ namespace rtm
 		vqmd result;
 		result.rotation = rotation;
 		result.translation = translation;
-		result.x_axis = vector_set_x(zero, vector_get_x(scale));
-		result.y_axis = vector_set_y(zero, vector_get_y(scale));
-		result.z_axis = vector_set_z(zero, vector_get_z(scale));
+		result.x_axis = vector_set_x(zero, vector_get_x_as_scalar(scale));
+		result.y_axis = vector_set_y(zero, vector_get_y_as_scalar(scale));
+		result.z_axis = vector_set_z(zero, vector_get_z_as_scalar(scale));
 
 		return result;
 	}
@@ -176,9 +176,9 @@ namespace rtm
 	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE vqmd RTM_SIMD_CALL vqm_set_scale(const vqmd& qvm, vector4d_arg0 scale) RTM_NO_EXCEPT
 	{
 		vqmd result = qvm;
-		result.x_axis = vector_set_x(qvm.x_axis, vector_get_x(scale));
-		result.y_axis = vector_set_y(qvm.y_axis, vector_get_y(scale));
-		result.z_axis = vector_set_z(qvm.z_axis, vector_get_z(scale));
+		result.x_axis = vector_set_x(qvm.x_axis, vector_get_x_as_scalar(scale));
+		result.y_axis = vector_set_y(qvm.y_axis, vector_get_y_as_scalar(scale));
+		result.z_axis = vector_set_z(qvm.z_axis, vector_get_z_as_scalar(scale));
 		return result;
 	}
 
