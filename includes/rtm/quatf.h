@@ -624,6 +624,30 @@ namespace rtm
 	}
 
 	//////////////////////////////////////////////////////////////////////////
+	// Multiplies a quaternion with a scalar.
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE quatf RTM_SIMD_CALL quat_mul(quatf_arg0 quat, float scalar) RTM_NO_EXCEPT
+	{
+#if defined(RTM_SSE2_INTRINSICS)
+		return _mm_mul_ps(quat, _mm_set_ps1(scalar));
+#elif defined(RTM_NEON_INTRINSICS)
+		return vmulq_n_f32(quat, scalar);
+#else
+		return quat_set(quat_get_x(quat) * scalar, quat_get_y(quat) * scalar, quat_get_z(quat) * scalar, quat_get_w(quat) * scalar);
+#endif
+	}
+
+#if defined(RTM_SSE2_INTRINSICS)
+	//////////////////////////////////////////////////////////////////////////
+	// Multiplies a quaternion with a scalar.
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE quatf RTM_SIMD_CALL quat_mul(quatf_arg0 quat, scalarf_arg1 scalar) RTM_NO_EXCEPT
+	{
+		return _mm_mul_ps(quat, _mm_shuffle_ps(scalar.value, scalar.value, _MM_SHUFFLE(0, 0, 0, 0)));
+	}
+#endif
+
+	//////////////////////////////////////////////////////////////////////////
 	// Multiplies a quaternion and a 3D vector, rotating it.
 	// Multiplication order is as follow: world_position = quat_mul_vector3(local_vector, local_to_world)
 	//////////////////////////////////////////////////////////////////////////

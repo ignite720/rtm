@@ -82,6 +82,19 @@ static QuatType quat_mul_scalar(const QuatType& lhs, const QuatType& rhs)
 }
 
 template<typename QuatType, typename FloatType>
+static QuatType quat_mul_scalar(const QuatType& lhs, FloatType rhs)
+{
+	FloatType lhs_raw[4] = { quat_get_x(lhs), quat_get_y(lhs), quat_get_z(lhs), quat_get_w(lhs) };
+
+	FloatType x = lhs_raw[0] * rhs;
+	FloatType y = lhs_raw[1] * rhs;
+	FloatType z = lhs_raw[2] * rhs;
+	FloatType w = lhs_raw[3] * rhs;
+
+	return quat_set(x, y, z, w);
+}
+
+template<typename QuatType, typename FloatType>
 static FloatType scalar_dot(const QuatType& lhs, const QuatType& rhs)
 {
 	return (quat_get_x(lhs) * quat_get_x(rhs)) + (quat_get_y(lhs) * quat_get_y(rhs)) + (quat_get_z(lhs) * quat_get_z(rhs)) + (quat_get_w(lhs) * quat_get_w(rhs));
@@ -233,6 +246,16 @@ static void test_quat_impl(const FloatType threshold)
 		quat1 = quat_set(FloatType(1.0), FloatType(0.0), FloatType(0.0), FloatType(0.0));
 		result = quat_mul(quat0, quat1);
 		result_ref = quat_mul_scalar<QuatType, FloatType>(quat0, quat1);
+		CHECK(quat_near_equal(result, result_ref, threshold));
+	}
+
+	{
+		QuatType quat0 = quat_from_euler(scalar_deg_to_rad(FloatType(30.0)), scalar_deg_to_rad(FloatType(-45.0)), scalar_deg_to_rad(FloatType(90.0)));
+		QuatType result = quat_mul(quat0, FloatType(123.13));
+		QuatType result_ref = quat_mul_scalar<QuatType, FloatType>(quat0, FloatType(123.13));
+		CHECK(quat_near_equal(result, result_ref, threshold));
+
+		result = quat_mul(quat0, scalar_set(FloatType(123.13)));
 		CHECK(quat_near_equal(result, result_ref, threshold));
 	}
 
