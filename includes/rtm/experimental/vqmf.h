@@ -223,7 +223,7 @@ namespace rtm
 		lhs_scale_shear.y_axis = quat_mul_vector3(lhs_scale_shear.y_axis, lhs.rotation);
 		lhs_scale_shear.z_axis = quat_mul_vector3(lhs_scale_shear.z_axis, lhs.rotation);
 
-		matrix3x3f scale_shear = matrix_mul(rhs_scale_shear, lhs_scale_shear);
+		matrix3x3f scale_shear = matrix_mul(lhs_scale_shear, rhs_scale_shear);
 		result.x_axis = scale_shear.x_axis;
 		result.y_axis = scale_shear.y_axis;
 		result.z_axis = scale_shear.z_axis;
