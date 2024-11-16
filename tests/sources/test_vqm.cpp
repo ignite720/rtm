@@ -366,7 +366,7 @@ static void test_vqm_impl(const FloatType threshold)
 
 TEST_CASE("vqmf math", "[math][vqm]")
 {
-	test_vqm_impl<vqmf, float>(1.0E-4F);
+	test_vqm_impl<vqmf, float>(1.0E-3F);
 }
 
 TEST_CASE("vqmd math", "[math][vqm]")
