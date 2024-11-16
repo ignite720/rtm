@@ -361,6 +361,102 @@ static void test_vqm_impl(const FloatType threshold)
 		CHECK(vector_all_near_equal3(inverse_mul_result.y_axis, identity.y_axis, threshold));
 		CHECK(vector_all_near_equal3(inverse_mul_result.z_axis, identity.z_axis, threshold));
 		CHECK(vector_all_near_equal3(inverse_mul_result.translation, identity.translation, threshold));
+
+		// One negative scale
+		scale = vector_set(FloatType(-4.0), FloatType(5.0), FloatType(6.0));
+
+		src_mtx = matrix_from_qvv(rotation, translation, scale);
+		inv_src_mtx = matrix_inverse(src_mtx);
+
+		dst_tx = vqm_set(translation, rotation, scale);
+		inv_dst_tx = vqm_inverse(dst_tx);
+
+		inv_dst_mtx = vqm_to_matrix(inv_dst_tx);
+		CHECK(vector_all_near_equal3(inv_src_mtx.x_axis, inv_dst_mtx.x_axis, threshold));
+		CHECK(vector_all_near_equal3(inv_src_mtx.y_axis, inv_dst_mtx.y_axis, threshold));
+		CHECK(vector_all_near_equal3(inv_src_mtx.z_axis, inv_dst_mtx.z_axis, threshold));
+		CHECK(vector_all_near_equal3(inv_src_mtx.w_axis, inv_dst_mtx.w_axis, threshold));
+
+		// T * T^-1 = identity
+		identity = vqm_identity();
+		inverse_mul_result = vqm_mul(dst_tx, vqm_inverse(dst_tx));
+		CHECK(quat_near_equal(inverse_mul_result.rotation, identity.rotation, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.x_axis, identity.x_axis, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.y_axis, identity.y_axis, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.z_axis, identity.z_axis, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.translation, identity.translation, threshold));
+
+		// T^-1 * T = identity
+		inverse_mul_result = vqm_mul(vqm_inverse(dst_tx), dst_tx);
+		CHECK(quat_near_equal(inverse_mul_result.rotation, identity.rotation, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.x_axis, identity.x_axis, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.y_axis, identity.y_axis, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.z_axis, identity.z_axis, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.translation, identity.translation, threshold));
+
+		// Two negative scale
+		scale = vector_set(FloatType(-4.0), FloatType(-5.0), FloatType(6.0));
+
+		src_mtx = matrix_from_qvv(rotation, translation, scale);
+		inv_src_mtx = matrix_inverse(src_mtx);
+
+		dst_tx = vqm_set(translation, rotation, scale);
+		inv_dst_tx = vqm_inverse(dst_tx);
+
+		inv_dst_mtx = vqm_to_matrix(inv_dst_tx);
+		CHECK(vector_all_near_equal3(inv_src_mtx.x_axis, inv_dst_mtx.x_axis, threshold));
+		CHECK(vector_all_near_equal3(inv_src_mtx.y_axis, inv_dst_mtx.y_axis, threshold));
+		CHECK(vector_all_near_equal3(inv_src_mtx.z_axis, inv_dst_mtx.z_axis, threshold));
+		CHECK(vector_all_near_equal3(inv_src_mtx.w_axis, inv_dst_mtx.w_axis, threshold));
+
+		// T * T^-1 = identity
+		identity = vqm_identity();
+		inverse_mul_result = vqm_mul(dst_tx, vqm_inverse(dst_tx));
+		CHECK(quat_near_equal(inverse_mul_result.rotation, identity.rotation, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.x_axis, identity.x_axis, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.y_axis, identity.y_axis, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.z_axis, identity.z_axis, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.translation, identity.translation, threshold));
+
+		// T^-1 * T = identity
+		inverse_mul_result = vqm_mul(vqm_inverse(dst_tx), dst_tx);
+		CHECK(quat_near_equal(inverse_mul_result.rotation, identity.rotation, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.x_axis, identity.x_axis, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.y_axis, identity.y_axis, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.z_axis, identity.z_axis, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.translation, identity.translation, threshold));
+
+		// Three negative scale
+		scale = vector_set(FloatType(-4.0), FloatType(-5.0), FloatType(-6.0));
+
+		src_mtx = matrix_from_qvv(rotation, translation, scale);
+		inv_src_mtx = matrix_inverse(src_mtx);
+
+		dst_tx = vqm_set(translation, rotation, scale);
+		inv_dst_tx = vqm_inverse(dst_tx);
+
+		inv_dst_mtx = vqm_to_matrix(inv_dst_tx);
+		CHECK(vector_all_near_equal3(inv_src_mtx.x_axis, inv_dst_mtx.x_axis, threshold));
+		CHECK(vector_all_near_equal3(inv_src_mtx.y_axis, inv_dst_mtx.y_axis, threshold));
+		CHECK(vector_all_near_equal3(inv_src_mtx.z_axis, inv_dst_mtx.z_axis, threshold));
+		CHECK(vector_all_near_equal3(inv_src_mtx.w_axis, inv_dst_mtx.w_axis, threshold));
+
+		// T * T^-1 = identity
+		identity = vqm_identity();
+		inverse_mul_result = vqm_mul(dst_tx, vqm_inverse(dst_tx));
+		CHECK(quat_near_equal(inverse_mul_result.rotation, identity.rotation, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.x_axis, identity.x_axis, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.y_axis, identity.y_axis, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.z_axis, identity.z_axis, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.translation, identity.translation, threshold));
+
+		// T^-1 * T = identity
+		inverse_mul_result = vqm_mul(vqm_inverse(dst_tx), dst_tx);
+		CHECK(quat_near_equal(inverse_mul_result.rotation, identity.rotation, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.x_axis, identity.x_axis, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.y_axis, identity.y_axis, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.z_axis, identity.z_axis, threshold));
+		CHECK(vector_all_near_equal3(inverse_mul_result.translation, identity.translation, threshold));
 	}
 }
 
