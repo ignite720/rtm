@@ -342,6 +342,7 @@ namespace rtm
 
 	//////////////////////////////////////////////////////////////////////////
 	// A QV transform represents a 3D rotation (quaternion) and a 3D translation (vector).
+	// QV transforms form a group with a well defined multiplication and inverse.
 	//////////////////////////////////////////////////////////////////////////
 	struct qvf
 	{
@@ -351,6 +352,7 @@ namespace rtm
 
 	//////////////////////////////////////////////////////////////////////////
 	// A QV transform represents a 3D rotation (quaternion) and a 3D translation (vector).
+	// QV transforms form a group with a well defined multiplication and inverse.
 	//////////////////////////////////////////////////////////////////////////
 	struct qvd
 	{
@@ -361,6 +363,7 @@ namespace rtm
 	//////////////////////////////////////////////////////////////////////////
 	// A QVS transform represents a 3D rotation (quaternion), a 3D translation (vector),
 	// and a single scalar uniform scale value.
+	// QVS transforms form a group with a well defined multiplication and inverse.
 	//////////////////////////////////////////////////////////////////////////
 	struct qvsf
 	{
@@ -371,6 +374,7 @@ namespace rtm
 	//////////////////////////////////////////////////////////////////////////
 	// A QVS transform represents a 3D rotation (quaternion), a 3D translation (vector),
 	// and a single scalar uniform scale value.
+	// QVS transforms form a group with a well defined multiplication and inverse.
 	//////////////////////////////////////////////////////////////////////////
 	struct qvsd
 	{
@@ -380,9 +384,11 @@ namespace rtm
 
 	//////////////////////////////////////////////////////////////////////////
 	// A QVV transform represents a 3D rotation (quaternion), 3D translation (vector), and 3D non-uniform scale (vector).
-	// It properly handles positive scaling but negative scaling is a bit more problematic.
-	// A best effort is made by converting the quaternion to a matrix during those operations.
-	// If scale fidelity is important, consider using an affine matrix 3x4 instead.
+	// WARNING: QVV transforms do _NOT_ form a group. It has no well defined multiplication and inverse.
+	// This is because when non-uniform scale is rotated (e.g. as the result of two QVV multiplying),
+	// shear is introduced and there is no place to store it. As such, QVV discards the introduced shear
+	// which is mathematically incorrect. As a result of this, QVV multiplication is _NOT_ assossiative and
+	// the inverse is incorrect. USE AT YOUR OWN RISK.
 	//////////////////////////////////////////////////////////////////////////
 	struct qvvf
 	{
@@ -393,9 +399,11 @@ namespace rtm
 
 	//////////////////////////////////////////////////////////////////////////
 	// A QVV transform represents a 3D rotation (quaternion), 3D translation (vector), and 3D non-uniform scale (vector).
-	// It properly handles positive scaling but negative scaling is a bit more problematic.
-	// A best effort is made by converting the quaternion to a matrix during those operations.
-	// If scale fidelity is important, consider using an affine matrix 3x4 instead.
+	// WARNING: QVV transforms do _NOT_ form a group. It has no well defined multiplication and inverse.
+	// This is because when non-uniform scale is rotated (e.g. as the result of two QVV multiplying),
+	// shear is introduced and there is no place to store it. As such, QVV discards the introduced shear
+	// which is mathematically incorrect. As a result of this, QVV multiplication is _NOT_ assossiative and
+	// the inverse is incorrect. USE AT YOUR OWN RISK.
 	//////////////////////////////////////////////////////////////////////////
 	struct qvvd
 	{

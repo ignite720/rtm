@@ -491,6 +491,20 @@ namespace rtm
 	}
 
 	//////////////////////////////////////////////////////////////////////////
+	// Adds two quaternions.
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK inline quatf RTM_SIMD_CALL quat_add(quatf_arg0 lhs, quatf_arg1 rhs) RTM_NO_EXCEPT
+	{
+#if defined(RTM_SSE2_INTRINSICS)
+		return _mm_add_ps(lhs, rhs);
+#elif defined(RTM_NEON_INTRINSICS)
+		return vaddq_f32(lhs, rhs);
+#else
+		return quat_set(quat_get_x(lhs) + quat_get_x(rhs), quat_get_y(lhs) + quat_get_y(rhs), quat_get_z(lhs) + quat_get_z(rhs), quat_get_w(lhs) + quat_get_w(rhs));
+#endif
+	}
+
+	//////////////////////////////////////////////////////////////////////////
 	// Multiplies two quaternions.
 	// Note that due to floating point rounding, the result might not be perfectly normalized.
 	// Multiplication order is as follow: local_to_world = quat_mul(local_to_object, object_to_world)
@@ -608,6 +622,30 @@ namespace rtm
 		return quat_set(x, y, z, w);
 #endif
 	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// Multiplies a quaternion with a scalar.
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE quatf RTM_SIMD_CALL quat_mul(quatf_arg0 quat, float scalar) RTM_NO_EXCEPT
+	{
+#if defined(RTM_SSE2_INTRINSICS)
+		return _mm_mul_ps(quat, _mm_set_ps1(scalar));
+#elif defined(RTM_NEON_INTRINSICS)
+		return vmulq_n_f32(quat, scalar);
+#else
+		return quat_set(quat_get_x(quat) * scalar, quat_get_y(quat) * scalar, quat_get_z(quat) * scalar, quat_get_w(quat) * scalar);
+#endif
+	}
+
+#if defined(RTM_SSE2_INTRINSICS)
+	//////////////////////////////////////////////////////////////////////////
+	// Multiplies a quaternion with a scalar.
+	//////////////////////////////////////////////////////////////////////////
+	RTM_DISABLE_SECURITY_COOKIE_CHECK RTM_FORCE_INLINE quatf RTM_SIMD_CALL quat_mul(quatf_arg0 quat, scalarf_arg1 scalar) RTM_NO_EXCEPT
+	{
+		return _mm_mul_ps(quat, _mm_shuffle_ps(scalar.value, scalar.value, _MM_SHUFFLE(0, 0, 0, 0)));
+	}
+#endif
 
 	//////////////////////////////////////////////////////////////////////////
 	// Multiplies a quaternion and a 3D vector, rotating it.

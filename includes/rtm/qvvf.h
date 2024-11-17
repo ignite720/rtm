@@ -36,6 +36,14 @@
 
 RTM_IMPL_FILE_PRAGMA_PUSH
 
+////////////////////////////////////////////////////////////////////////////////
+// WARNING: QVV transforms do _NOT_ form a group. It has no well defined multiplication and inverse.
+// This is because when non-uniform scale is rotated (e.g. as the result of two QVV multiplying),
+// shear is introduced and there is no place to store it. As such, QVV discards the introduced shear
+// which is mathematically incorrect. As a result of this, QVV multiplication is _NOT_ assossiative and
+// the inverse is incorrect. USE AT YOUR OWN RISK.
+////////////////////////////////////////////////////////////////////////////////
+
 namespace rtm
 {
 	RTM_IMPL_VERSION_NAMESPACE_BEGIN
